@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}YRYRParts | Payment{% endblock title %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/filters_page.css' %}">
+<link rel="stylesheet" href="{% static 'css/checkout_page.css' %}">
+
+{% endblock css %}
+
+
+{% block content %}
+{% with total_price=order.get_total_price %}
+<div id="script_data" total-price="{{order.get_total_price}}" data-order-id="{{order.id}}" data-url="{% url 'Payment:sucess' %}" data-paypal-email="{{paypal_email_receive}}" data-paypal-secret="{{paypal_secret_id}}" data-paypal-client="{{paypal_client_id}}" style="width: 100vw; height: 80px;"></div>
+<div class="landing-filters">
+    <img src="{% static 'img/man_jetski.jpg' %}">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+        <path fill-opacity="1" d="M0,224L1440,128L1440,320L0,320Z"></path>
+    </svg>
+    <h1>Checkout</h1>
+</div>
+<div class="row" style="display:flex ;align-items: center;justify-content: center;">
+    <div class="checkout" style="width:50%">
+        {% include "order_summary.html" with items=order.items.all total_price=order.get_total_price %}
+
+        {% comment %} <div id="paypal-button-container">
+            <button onclick="showhide(stripecheckout)" id="stripe-button-conatiner" class="stripebutton">Stripe</button>
+        </div> {% endcomment %}
+        
+    </div>
+
+
+    <div id="stripecheckout" class="stripecheckout">
+        {% include "payment/paymentstripe.html" with items=order.items.all total_price=order.get_total_price%}
+    </div>
+</div>
+
+{% endwith %}
+
+
+{% comment %} <div hidden id="stripecheckout" class="stripecheckout">
+    {% include "payment/paymentstripe.html" with items=order.items.all total_price=order.get_total_price%}
+</div> {% endcomment %}
+
+{% endblock content %}
+
+
+{% block script %}
+{% comment %} <script src="https://www.paypal.com/sdk/js?client-id={{paypal_client_id}}"></script> {% endcomment %}
+<script src="{% static 'js/payment.js' %}"></script>
+{% endblock script %}
